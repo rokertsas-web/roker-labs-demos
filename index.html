@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roker Labs — Demos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --text: #f0f0f0;
+      --muted: #888;
+      --radius: 16px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--accent); }
+    .nav-badge {
+      font-size: 0.72rem;
+      background: var(--accent);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 50px;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.3);
+      padding: 5px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      padding: 20px 40px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 40px rgba(108,99,255,0.18);
+    }
+
+    .card-header {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+    }
+    .card-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.08;
+    }
+
+    .card--carhub .card-header   { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+    .card--motohub .card-header  { background: linear-gradient(135deg, #1a1200, #2d2000); }
+    .card--sabor .card-header    { background: linear-gradient(135deg, #1a0000, #2d0a00); }
+    .card--fixmobile .card-header{ background: linear-gradient(135deg, #001a14, #002d22); }
+
+    .card-body { padding: 24px; flex: 1; }
+    .card-rubro {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .card-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .card-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .tag {
+      font-size: 0.72rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+
+    .card-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #4ade80;
+      font-weight: 600;
+    }
+    .card-status::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .card-cta {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 24px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .grid { padding: 16px 20px 60px; gap: 16px; }
+      .hero { padding: 50px 20px 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Roker<span>Labs</span></div>
+    <div class="nav-badge">DEMOS</div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-tag">Portfolio de sistemas</div>
+    <h1>Soluciones digitales<br />a medida de tu <em>negocio</em></h1>
+    <p>Cada demo es un sistema real, con datos cargados. Seleccioná el rubro que más se parece al tuyo.</p>
+  </section>
+
+  <div class="grid">
+
+    <!-- CarHub -->
+    <a class="card card--carhub" href="https://carhub-demo.pages.dev" target="_blank" rel="noopener">
+      <div class="card-header">🚗</div>
+      <div class="card-body">
+        <div class="card-rubro">Concesionaria</div>
+        <div class="card-name">CarHub</div>
+        <div class="card-desc">Gestión completa de stock vehicular, tasaciones, cotizaciones y panel de vendedores con métricas en tiempo real.</div>
+        <div class="card-features">
+          <span class="tag">Stock de vehículos</span>
+          <span class="tag">Tasador IA</span>
+          <span class="tag">Bot Telegram</span>
+          <span class="tag">Panel admin</span>
+          <span class="tag">Reportes</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-status">Live demo</span>
+        <span class="card-cta">Ver sistema →</span>
+      </div>
+    </a>
+
+    <!-- MotoHub -->
+    <a class="card card--motohub" href="https://motohub-demo.pages.dev" target="_blank" rel="noopener">
+      <div class="card-header">🏍️</div>
+      <div class="card-body">
+        <div class="card-rubro">Repuestos de motos</div>
+        <div class="card-name">MotoHub</div>
+        <div class="card-desc">Control de inventario de repuestos, compatibilidades por modelo, alertas de stock bajo y catálogo para clientes.</div>
+        <div class="card-features">
+          <span class="tag">Inventario</span>
+          <span class="tag">Compatibilidades</span>
+          <span class="tag">Alertas stock</span>
+          <span class="tag">Catálogo web</span>
+          <span class="tag">Precios</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-status">Live demo</span>
+        <span class="card-cta">Ver sistema →</span>
+      </div>
+    </a>
+
+    <!-- Sabor Criollo -->
+    <a class="card card--sabor" href="https://saborcriollo-demo.pages.dev" target="_blank" rel="noopener">
+      <div class="card-header">🍖</div>
+      <div class="card-body">
+        <div class="card-rubro">Restaurante / POS</div>
+        <div class="card-name">Sabor Criollo</div>
+        <div class="card-desc">Sistema de mesas, comanda digital, caja y reportes de ventas por turno. Desde el celular del mozo hasta el panel del dueño.</div>
+        <div class="card-features">
+          <span class="tag">Mesas</span>
+          <span class="tag">Comanda digital</span>
+          <span class="tag">Caja / cierre</span>
+          <span class="tag">Reportes diarios</span>
+          <span class="tag">Multi-turno</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-status">Live demo</span>
+        <span class="card-cta">Ver sistema →</span>
+      </div>
+    </a>
+
+    <!-- FixMobile -->
+    <a class="card card--fixmobile" href="https://fixmobile-demo.streamlit.app" target="_blank" rel="noopener">
+      <div class="card-header">📱</div>
+      <div class="card-body">
+        <div class="card-rubro">Taller de celulares</div>
+        <div class="card-name">FixMobile</div>
+        <div class="card-desc">Registro de reparaciones, seguimiento por cliente, stock de repuestos y notificaciones automáticas al whatsapp del cliente.</div>
+        <div class="card-features">
+          <span class="tag">Órdenes de trabajo</span>
+          <span class="tag">Stock repuestos</span>
+          <span class="tag">Notif. WhatsApp</span>
+          <span class="tag">Historial cliente</span>
+          <span class="tag">Dashboard</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-status">Live demo</span>
+        <span class="card-cta">Ver sistema →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    Roker Labs &mdash; Sistemas a medida para negocios argentinos &middot;
+    <a href="mailto:rokertsas@gmail.com">Contacto</a>
+  </footer>
+
+</body>
+</html>

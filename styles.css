@@ -1893,3 +1893,86 @@ body::after {
   .cell--h2 { grid-row: span 1; }
   .footer { grid-template-columns: 1fr; }
 }
+
+/* ─── Mobile-first hardening (skill: adapta-movil · 2026-05-26) ───
+   Resuelve: notch iPhone, dynamic viewport, tap highlight gris,
+   pull-to-refresh accidental, touch targets WCAG 2.5.5. */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  /* Bloquear pull-to-refresh y bounce horizontal sin romper scroll vertical */
+  overscroll-behavior-y: contain;
+  overscroll-behavior-x: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Eliminar el highlight gris/azul al tocar elementos en iOS/Android */
+a, button, [role="button"], .btn, .cell, .topbar-nav a, .lookup-item {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Touch targets — WCAG 2.5.5 + Apple HIG (44x44 mínimo) */
+.btn, .nav-cta, .country-switch button, .quick-launch-btn,
+.lookup-item, .tab-btn {
+  min-height: 44px;
+  touch-action: manipulation; /* elimina el delay 300ms del double-tap zoom */
+}
+
+/* Safe-area iPhone (notch + home-indicator) en elementos pegados a bordes */
+.topbar {
+  padding-top: calc(var(--space-3) + env(safe-area-inset-top));
+  padding-left:  max(var(--space-4), env(safe-area-inset-left));
+  padding-right: max(var(--space-4), env(safe-area-inset-right));
+}
+
+.page {
+  padding-left:  max(var(--space-4), env(safe-area-inset-left));
+  padding-right: max(var(--space-4), env(safe-area-inset-right));
+  padding-bottom: max(var(--space-12), calc(env(safe-area-inset-bottom) + var(--space-8)));
+}
+
+/* Dynamic viewport: usar svh para hero (evita el "salto" cuando aparece/desaparece la URL bar de Safari) */
+@supports (height: 100svh) {
+  .hero { min-height: calc(100svh - 72px); }
+}
+
+/* Modales y dropdowns en mobile: usar dvh para que ocupen toda la pantalla útil */
+@supports (height: 100dvh) {
+  .quick-launch-dropdown,
+  .quick-launch-backdrop {
+    max-height: 100dvh;
+  }
+}
+
+/* Mobile chico (≤480px) — refinar densidad */
+@media (max-width: 480px) {
+  .hero h1 { font-size: clamp(1.75rem, 8vw, 2.5rem); line-height: 1.1; }
+  .hero-ctas { flex-direction: column; gap: var(--space-3); }
+  .hero-ctas .btn { width: 100%; justify-content: center; }
+  .trust-bar { padding: var(--space-4); }
+  .lead-magnet, .wa-cta { padding: var(--space-6) var(--space-4); }
+  .cell { padding: var(--space-5); }
+  /* QuickLaunch dropdown ocupa todo el ancho útil en mobile */
+  .quick-launch-dropdown {
+    left: var(--space-3);
+    right: var(--space-3);
+    width: auto;
+    max-width: none;
+  }
+}
+
+/* Respetar prefers-reduced-motion para usuarios con sensibilidad vestibular */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

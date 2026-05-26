@@ -1,0 +1,324 @@
+/* ─────────────────────────────────────────────────────────────────
+   SUPERCELL · AURORA GLASS — design tokens
+   ─────────────────────────────────────────────────────────────────
+   New visual direction: deep space gray base, pure white text,
+   crimson accents from the SUPERCELL Superman-shield logo.
+   Style: Glass-neumorphism — translucent surfaces, soft relief,
+   crimson glow on focus/urgent states.
+
+   The codebase context (product copy, screens, flows) is preserved;
+   only the visual language changes. All values here are the source
+   of truth for any HTML/CSS generated against this design system.
+   ───────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── CANVAS ─────────────────────────────────────────────────────
+     Deep space gray. The full app sits on this. Never use pure
+     black — there's always a hint of blue-ink to give the crimson
+     a place to glow against.
+     ─────────────────────────────────────────────────────────────── */
+  --canvas-0:  #06080C;   /* deepest — used only for vignettes */
+  --canvas-1:  #0B0D12;   /* PAGE BACKGROUND — start here */
+  --canvas-2:  #10131A;   /* alt surface — table stripe / inset */
+  --canvas-3:  #161A23;   /* raised panel (non-glass) */
+  --canvas-4:  #1E232F;   /* hover state */
+
+  /* Diagonal line texture — apply as background-image overlay */
+  --canvas-grain: repeating-linear-gradient(
+    135deg,
+    rgba(255,255,255,0.012) 0px,
+    rgba(255,255,255,0.012) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+
+  /* ── GLASS ──────────────────────────────────────────────────────
+     The primary surface treatment. Stack:
+       background: var(--glass-fill);
+       backdrop-filter: blur(var(--glass-blur));
+       border: 1px solid var(--glass-border);
+       box-shadow: var(--glass-shadow);
+     Add `--glass-edge` as a ::before pseudo for the top highlight.
+     ─────────────────────────────────────────────────────────────── */
+  --glass-blur:   24px;
+  --glass-fill:        rgba(255, 255, 255, 0.04);
+  --glass-fill-hover:  rgba(255, 255, 255, 0.06);
+  --glass-fill-strong: rgba(255, 255, 255, 0.07);  /* dialogs, popovers */
+  --glass-border:      rgba(255, 255, 255, 0.08);
+  --glass-border-hover:rgba(255, 255, 255, 0.14);
+  --glass-edge: linear-gradient(180deg,
+    rgba(255,255,255,0.14) 0%,
+    rgba(255,255,255,0)    40%);
+  --glass-shadow:
+    0  1px  0  0 rgba(255,255,255,0.04) inset,
+    0 12px 32px -8px rgba(0,0,0,0.55),
+    0  2px  8px -2px rgba(0,0,0,0.35);
+
+  /* ── NEUMORPH ───────────────────────────────────────────────────
+     Soft relief on the dark canvas. RAISED: brighter top-left
+     highlight + darker bottom-right shadow. PRESSED: inverse.
+     ─────────────────────────────────────────────────────────────── */
+  --neu-raised:
+    -1px -1px 2px 0 rgba(255,255,255,0.04),
+     2px  2px 6px 0 rgba(0,0,0,0.45),
+    -1px -1px 0 0 rgba(255,255,255,0.06) inset;
+  --neu-raised-hover:
+    -1px -1px 3px 0 rgba(255,255,255,0.06),
+     3px  3px 10px 0 rgba(0,0,0,0.55),
+    -1px -1px 0 0 rgba(255,255,255,0.08) inset;
+  --neu-pressed:
+     1px  1px 3px 0 rgba(0,0,0,0.45) inset,
+    -1px -1px 2px 0 rgba(255,255,255,0.03) inset;
+
+  /* ── BRAND CRIMSON ──────────────────────────────────────────────
+     From the Superman-shield logo. Use sparingly — primary CTAs,
+     focus rings, urgent-alert pulse. Never as a flood chrome.
+     ─────────────────────────────────────────────────────────────── */
+  --crimson-300: #FCA5A5;
+  --crimson-400: #F87171;
+  --crimson-500: #EF4444;   /* glow only */
+  --crimson-600: #DC2626;   /* PRIMARY — CTAs, brand accent */
+  --crimson-700: #B91C1C;   /* hover */
+  --crimson-800: #991B1B;   /* press */
+  --crimson-soft: rgba(220, 38, 38, 0.10);    /* tint background */
+  --crimson-soft-hover: rgba(220, 38, 38, 0.16);
+  --crimson-ring: rgba(220, 38, 38, 0.35);   /* focus ring */
+  --crimson-glow: 0 0 24px -2px rgba(239, 68, 68, 0.45),
+                  0 0  8px -1px rgba(239, 68, 68, 0.65);
+  --crimson-glow-strong: 0 0 40px -4px rgba(239, 68, 68, 0.55),
+                         0 0 14px -2px rgba(239, 68, 68, 0.75);
+
+  /* ── FOREGROUND ─────────────────────────────────────────────────
+     White-leaning. Step down by opacity, not hue, to keep the
+     glass feel coherent. */
+  --fg-0:  #FFFFFF;             /* primary text, numbers, brand wordmark */
+  --fg-1:  rgba(255,255,255,0.92);
+  --fg-2:  rgba(255,255,255,0.72);   /* body / values */
+  --fg-3:  rgba(255,255,255,0.52);   /* labels, secondary */
+  --fg-4:  rgba(255,255,255,0.35);   /* placeholders, faint icons */
+  --fg-5:  rgba(255,255,255,0.18);   /* disabled */
+
+  /* ── STATUS ─────────────────────────────────────────────────────
+     Reserved for data states. Same role as in the original codebase
+     (rose=debt/danger, emerald=cash/ok, amber=warning) but tuned for
+     dark surfaces — slightly desaturated, slightly luminous.
+     ─────────────────────────────────────────────────────────────── */
+  --ok-400:   #34D399;   /* emerald light */
+  --ok-500:   #10B981;
+  --ok-soft:  rgba(16, 185, 129, 0.10);
+  --ok-glow:  0 0 24px -4px rgba(16, 185, 129, 0.35);
+
+  --warn-400: #FBBF24;   /* amber light */
+  --warn-500: #F59E0B;
+  --warn-soft:rgba(245, 158, 11, 0.12);
+
+  --danger-400: #FB7185;   /* rose light */
+  --danger-500: #F43F5E;
+  --danger-soft:rgba(244, 63, 94, 0.12);
+
+  --info-400: #60A5FA;
+  --info-soft:rgba(96, 165, 250, 0.12);
+
+  /* ── BANK TILE PALETTE ─────────────────────────────────────────
+     Each bank gets a soft tinted gradient with a distinct accent.
+     Used in the Caja screen and the multi-medio cobro panel.
+     ─────────────────────────────────────────────────────────────── */
+  --bank-galicia:    #F59E0B;   /* gold-amber */
+  --bank-galicia-gradient: linear-gradient(135deg,
+    rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.02) 100%);
+
+  --bank-santander:  #F43F5E;   /* rose */
+  --bank-santander-gradient: linear-gradient(135deg,
+    rgba(244,63,94,0.18) 0%, rgba(244,63,94,0.02) 100%);
+
+  --bank-bbva:       #3B82F6;   /* blue */
+  --bank-bbva-gradient: linear-gradient(135deg,
+    rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.02) 100%);
+
+  --bank-mp:         #22D3EE;   /* cyan */
+  --bank-mp-gradient: linear-gradient(135deg,
+    rgba(34,211,238,0.18) 0%, rgba(34,211,238,0.02) 100%);
+
+  /* ── TYPE ───────────────────────────────────────────────────────
+     Inter. Tight tracking on display sizes, neutral on body.
+     Three weights only: 300 (body), 500 (UI), 700 (titles/numbers),
+     900 reserved for the SUPERCELL wordmark.
+     ─────────────────────────────────────────────────────────────── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+               Consolas, monospace;
+  --font-feature: "cv11", "ss01", "ss03";   /* Inter stylistic sets */
+
+  --text-xs:    0.6875rem;  /* 11px — tiny labels, eyebrows */
+  --text-sm:    0.8125rem;  /* 13px — UI text, table cells */
+  --text-base:  0.9375rem;  /* 15px — body */
+  --text-md:    1.0625rem;  /* 17px — dialog title */
+  --text-lg:    1.25rem;    /* 20px — stat value small */
+  --text-xl:    1.75rem;    /* 28px — page H1 */
+  --text-2xl:   2.25rem;    /* 36px — KPI large numbers */
+  --text-3xl:   3rem;       /* 48px — saldo total */
+  --text-display: 4.5rem;   /* 72px — login brand wordmark */
+
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --weight-black:    900;
+
+  --tracking-tight:   -0.01em;
+  --tracking-tighter: -0.025em;
+  --tracking-display: -0.04em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.12em;   /* eyebrows, kickers — generous */
+
+  --leading-none:    1;
+  --leading-tight:   1.2;
+  --leading-snug:    1.35;
+  --leading-normal:  1.55;
+
+  /* ── SPACING ──────────────────────────────────────────────────── */
+  --space-px:  1px;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ── RADII ──────────────────────────────────────────────────────
+     The glass-neumorph aesthetic likes generous corners. Most
+     containers are 16-24px; pills are full.
+     ─────────────────────────────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;    /* DEFAULT card / row */
+  --radius-xl:  20px;    /* glass panel */
+  --radius-2xl: 28px;    /* hero glass / login panel */
+  --radius-full: 9999px;
+
+  /* ── ELEVATION ──────────────────────────────────────────────── */
+  --shadow-1: 0 1px 2px 0 rgba(0,0,0,0.3);
+  --shadow-2: 0 4px 12px -2px rgba(0,0,0,0.4);
+  --shadow-3: 0 12px 32px -8px rgba(0,0,0,0.55);
+  --shadow-4: 0 24px 64px -12px rgba(0,0,0,0.7);
+
+  /* ── MOTION ───────────────────────────────────────────────────── */
+  --t-instant: 90ms;
+  --t-fast:   180ms;
+  --t-base:   280ms;
+  --t-slow:   480ms;
+  --t-cascade-step: 60ms;     /* stagger between list rows */
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);     /* soft expo-out */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-back-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Heights — same touch floor as the codebase (Sprint 3 mobile) */
+  --h-input: 44px;
+  --h-button: 44px;
+  --h-button-sm: 36px;
+  --h-button-lg: 52px;
+  --h-row: 64px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   BASE / ELEMENTS
+   Drop-in styles so an unstyled HTML doc still looks right.
+   ───────────────────────────────────────────────────────────────── */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: var(--font-feature);
+  font-weight: var(--weight-light);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--fg-1);
+  background-color: var(--canvas-1);
+  background-image:
+    radial-gradient(60% 50% at 18% 12%, rgba(220,38,38,0.10), transparent 70%),
+    radial-gradient(50% 40% at 90% 85%, rgba(220,38,38,0.06), transparent 70%),
+    var(--canvas-grain);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, .h1 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--fg-0);
+  margin: 0;
+}
+h2, .h2 {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-0);
+  margin: 0;
+}
+h3, .h3 {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+  margin: 0;
+}
+p {
+  margin: 0;
+  color: var(--fg-2);
+}
+
+.eyebrow, .kicker {
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--fg-3);
+}
+
+code, kbd, pre {
+  font-family: var(--font-mono);
+}
+
+/* The wordmark exactly as it appears on Login */
+.wordmark {
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-none);
+  color: var(--fg-0);
+}
+.wordmark .accent { color: var(--crimson-500); }
+
+/* ─────────────────────────────────────────────────────────────────
+   ANIMATION KEYFRAMES (shared)
+   ───────────────────────────────────────────────────────────────── */
+@keyframes aurora-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes aurora-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.0), var(--neu-raised); }
+  50%      { box-shadow: 0 0 28px -4px rgba(239,68,68,0.55),
+                          0 0 8px  -1px rgba(239,68,68,0.7),
+                          var(--neu-raised); }
+}
+@keyframes aurora-ping {
+  0%   { transform: scale(0.4); opacity: 0.6; }
+  100% { transform: scale(2);   opacity: 0;   }
+}
+@keyframes aurora-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}

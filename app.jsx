@@ -305,7 +305,7 @@ function HeroVisual({ country }) {
             <span className="traffic" style={{ width: 9, height: 9, borderRadius: "50%", background: "#FEBC2E" }} />
             <span className="traffic" style={{ width: 9, height: 9, borderRadius: "50%", background: "#28C840" }} />
             <span style={{ flex: 1, marginLeft: 12, height: 16, borderRadius: 5, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", padding: "0 10px", fontSize: 10, color: "var(--fg-4)", fontFamily: "var(--font-mono)" }}>
-              {country === "PY" ? "pos.demo.rokerlabs.com.py/mostrador" : "pos.demo.rokerlabs.com.ar/mostrador"}
+              {country === "PY" ? "saborcriollo-demo.pages.dev" : "saborcriollo-demo.pages.dev"}
             </span>
             <span style={{ fontSize: 10, color: "var(--fg-4)", letterSpacing: "0.04em" }}>Caja · Lu</span>
           </div>
@@ -525,13 +525,13 @@ function liveFrame(host, children) {
 
 }
 
-function PosLive({ country, svc }) {return liveFrame(country === "PY" ? "pos.demo.rokerlabs.com.py" : "pos.demo.rokerlabs.com.ar", <PosMock country={country} />);}
-function DashLive({ country, svc }) {return liveFrame("dashboard.rokerlabs.com", <DashMock country={country} />);}
-function ChatLive({ country, svc }) {return liveFrame("atajo-ia.rokerlabs.com", <ChatMock country={country} />);}
-function CatalogLive({ svc }) {return liveFrame("tienda.rokerlabs.com", <CatalogMock />);}
-function ConsoleLive({ svc, country }) {return liveFrame(svc.id + ".rokerlabs.com", <ConsoleMock service={svc} country={country} />);}
+function PosLive({ country, svc }) {return liveFrame(country === "PY" ? "saborcriollo-demo.pages.dev" : "saborcriollo-demo.pages.dev", <PosMock country={country} />);}
+function DashLive({ country, svc }) {return liveFrame("carhub-demo.pages.dev", <DashMock country={country} />);}
+function ChatLive({ country, svc }) {return liveFrame("fixmobile-demo.pages.dev", <ChatMock country={country} />);}
+function CatalogLive({ svc }) {return liveFrame("motohub-demo.pages.dev", <CatalogMock />);}
+function ConsoleLive({ svc, country }) {return liveFrame("roker-labs-demos.pages.dev/" + svc.id, <ConsoleMock service={svc} country={country} />);}
 function BankLive({ bankList, svc }) {
-  return liveFrame(svc.id + ".rokerlabs.com",
+  return liveFrame("roker-labs-demos.pages.dev/" + svc.id,
   <div className="bank-grid bank-grid--live">
       {bankList.map((b) => {
       const c = bankColor(b);
@@ -722,12 +722,12 @@ function Footer({ data, country }) {
       <div className="col">
         <h4>Contacto</h4>
         <a href="#contacto">WhatsApp directo</a>
-        <a href="mailto:sergio@rokerlabs.com">sergio@rokerlabs.com</a>
-        <a href="#contacto">Tandil · BA · Argentina</a>
+        <a href="mailto:rokertsas@gmail.com">rokertsas@gmail.com</a>
+        <a href="#contacto">Argentina · trabajando con Paraguay</a>
       </div>
       <div className="footer-bottom" style={{ gridColumn: "1 / -1" }}>
         <span>© 2026 Roker Labs · Sergio Roker</span>
-        <span>Hecho a mano en {country === "PY" ? "Tandil 🇦🇷 · trabajando con PY 🇵🇾" : "Tandil, Buenos Aires"}</span>
+        <span>Hecho a mano en {country === "PY" ? "Argentina 🇦🇷 · trabajando con PY 🇵🇾" : "Argentina · trabajando con Paraguay"}</span>
       </div>
     </footer>);
 

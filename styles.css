@@ -1,7 +1,11 @@
 /* ─── Roker Labs landing — page-specific styles ─── */
 
-/* P0-2 safety net: no horizontal scroll en ningún viewport (fix audit 2026-05-26) */
-html, body { overflow-x: hidden; max-width: 100%; }
+/* P0-2 safety net: no horizontal scroll en ningún viewport (fix audit 2026-05-26).
+   Override del height:100% que viene de assets/colors_and_type.css:238 —
+   sin esto el body se clipea a 1 viewport cuando overflow-x: hidden fuerza
+   overflow-y: auto implícito. */
+html, body { overflow-x: hidden; }
+body { height: auto; min-height: 100vh; }
 
 /* Make sure body has a slightly richer atmospheric glow than the default */
 body {

@@ -1,5 +1,8 @@
 /* ─── Roker Labs landing — page-specific styles ─── */
 
+/* P0-2 safety net: no horizontal scroll en ningún viewport (fix audit 2026-05-26) */
+html, body { overflow-x: hidden; max-width: 100%; }
+
 /* Make sure body has a slightly richer atmospheric glow than the default */
 body {
   background-image:
@@ -1947,6 +1950,33 @@ a, button, [role="button"], .btn, .cell, .topbar-nav a, .lookup-item {
   .quick-launch-dropdown,
   .quick-launch-backdrop {
     max-height: 100dvh;
+  }
+}
+
+/* P0-1 fix: trust-bar wrap en mobile/tablet (audit 2026-05-26) */
+@media (max-width: 768px) {
+  .trust {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .trust-list {
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: var(--space-3);
+    width: 100%;
+  }
+  .trust-item {
+    white-space: normal;
+    font-size: var(--text-xs);
+  }
+  .trust-stats {
+    border-left: 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-left: 0;
+    padding-top: var(--space-3);
+    width: 100%;
+    flex-wrap: wrap;
   }
 }
 

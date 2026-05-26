@@ -19,6 +19,25 @@
 <body>
 <div id="root"></div>
 
+<!-- Cleanup defensivo: el sitio dejó de ser PWA. Browsers con SW viejo
+     (workbox del deploy anterior) ven pantalla en blanco porque sirven
+     assets cacheados rotos. Desregistramos cualquier SW + borramos caches
+     ANTES de cargar React, para que el siguiente F5 sirva todo fresco. -->
+<script>
+(function () {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations()
+      .then(function (regs) { regs.forEach(function (r) { r.unregister(); }); })
+      .catch(function () {});
+  }
+  if ('caches' in window) {
+    caches.keys()
+      .then(function (keys) { keys.forEach(function (k) { caches.delete(k); }); })
+      .catch(function () {});
+  }
+})();
+</script>
+
 <!-- React 18 production builds (sin Babel-in-browser, JSX precompilado con esbuild) -->
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>

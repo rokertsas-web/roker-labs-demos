@@ -19,6 +19,18 @@ window.DEMOS = [
     tech: "React · FastAPI · SQLite",
   },
   {
+    id: "lomiteria",
+    vertical: "Restaurante · Salones",
+    name: "Lomitería",
+    tagline: "Sistema completo con mesas por salón, delivery en tiempo real y bot WhatsApp para reservas automáticas.",
+    url: "https://lyl-restaurante.fly.dev/",
+    color: "#f97316",
+    bgImage: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=60&auto=format&fit=crop",
+    bgMood: "linear-gradient(135deg, #2a1a00dd, #08080bcc)",
+    features: ["Mesas por salón", "POS táctil", "Delivery live", "Bot WhatsApp reservas", "Panel admin"],
+    tech: "React · FastAPI · Fly.io",
+  },
+  {
     id: "celulares",
     vertical: "Mayorista de Repuestos",
     name: "FixMobile",
@@ -53,18 +65,6 @@ window.DEMOS = [
     bgMood: "linear-gradient(135deg, #0a1a1299, #08080bcc)",
     features: ["Inventario", "Por modelo", "Stock bajo", "Catálogo digital", "AR + PY"],
     tech: "Next.js · R3F · GSAP",
-  },
-  {
-    id: "lomiteria",
-    vertical: "Restaurante · Salones",
-    name: "Lomitería",
-    tagline: "Sistema completo con mesas por salón, delivery en tiempo real y bot WhatsApp para reservas automáticas.",
-    url: "https://lyl-restaurante.fly.dev/",
-    color: "#f59e0b",
-    bgImage: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=60&auto=format&fit=crop",
-    bgMood: "linear-gradient(135deg, #2a1a0099, #08080bcc)",
-    features: ["Mesas por salón", "POS táctil", "Delivery live", "Bot WhatsApp reservas", "Panel admin"],
-    tech: "React · FastAPI · Fly.io",
   },
 ];
 

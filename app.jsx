@@ -71,7 +71,9 @@ function Topbar({ country, setCountry, services }) {
       </div>
       <nav className="topbar-nav">
         <a href="#demos">Sistemas</a>
+        <a href="#proceso">Cómo trabajo</a>
         <a href="#analisis">Análisis gratis</a>
+        <a href="#faq">FAQ</a>
         <a href="#contacto">Contacto</a>
       </nav>
       <div className="topbar-spacer" />
@@ -773,6 +775,103 @@ function Footer({ data, country }) {
 
 }
 
+/* ─── Process ─── */
+function Process({ waPrefill }) {
+  const steps = [
+    { n: "01", t: "Llamada de diagnóstico", d: "25 minutos, gratis. Vemos tu operación, los cuellos de botella y si tiene sentido seguir." },
+    { n: "02", t: "Propuesta en 48hs", d: "Precio fijo, sin letra chica. Un mock funcional con tus datos reales. Sin contrato todavía." },
+    { n: "03", t: "Construcción iterativa", d: "Primera versión funcional en 30 días. Updates semanales. El equipo empieza a usar mientras se construye." },
+    { n: "04", t: "Lanzamiento y soporte", d: "WhatsApp directo. Bugs resueltos el mismo día. Soporte incluido 60 días post-lanzamiento." },
+  ];
+
+  return (
+    <section className="section process-section" id="proceso">
+      <div className="section-head">
+        <div className="section-eyebrow">Cómo trabajo</div>
+        <h2 className="section-h2">Del diagnóstico al sistema en producción.</h2>
+        <p className="section-sub">Sin metodologías inventadas. Sin reuniones de planning eternas. Cuatro pasos.</p>
+      </div>
+      <div className="process-steps">
+        {steps.map((s) => (
+          <div key={s.n} className="process-step">
+            <div className="process-step__num">{s.n}</div>
+            <div>
+              <h3 className="process-step__title">{s.t}</h3>
+              <p className="process-step__desc">{s.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="process-cta">
+        <MagneticButton strength={0.3}>
+          <a className="btn btn--lg btn--primary btn--pulse" href={waPrefill("una llamada de diagnóstico gratuita")}>
+            Agendar llamada gratuita <TechIcon name="arrow-right" size={18} />
+          </a>
+        </MagneticButton>
+        <span style={{ fontSize: 13, color: "var(--fg-4)" }}>25 min · sin compromiso · sin tarjeta</span>
+      </div>
+    </section>);
+}
+
+/* ─── FAQ accordion ─── */
+function FAQ() {
+  const items = [
+    {
+      q: "¿Trabajás solo? ¿Qué pasa si me dejás colgado?",
+      a: "15 años trabajando así, sin interrupciones mayores. Para urgencias críticas tengo backup en la nube y acceso remoto desde cualquier dispositivo. El SLA real: en 3 años de sistemas propios no hubo downtime mayor a 4 horas en horario laboral.",
+    },
+    {
+      q: "¿Cuánto tarda implementar un sistema desde cero?",
+      a: "30 días para la primera versión funcional. No el producto terminado — el núcleo operativo que el equipo empieza a usar. Las iteraciones siguientes salen en sprints de 7 a 10 días.",
+    },
+    {
+      q: "¿Qué pasa si necesito cambios después del lanzamiento?",
+      a: "Soporte incluido 60 días post-lanzamiento. Bugs = mismo día. Features nuevas = cotización separada antes de empezar, sin sorpresas ni cambios de precio en el camino.",
+    },
+    {
+      q: "¿Integrás con MercadoLibre, AFIP, WhatsApp?",
+      a: "Sí. ML (listings, órdenes, stock), AFIP/ARCA (SICORE, percepciones, facturación electrónica), SIFEN Paraguay, WhatsApp API. Cada integración se cotiza por separado según complejidad.",
+    },
+    {
+      q: "¿El código queda mío si dejamos de trabajar?",
+      a: "100%. Al cerrar el proyecto entrego el repositorio completo (GitHub privado a tu nombre) más documentación técnica. Sin lock-in: cualquier desarrollador puede continuar desde donde dejamos.",
+    },
+    {
+      q: "¿Puedo empezar con algo pequeño sin compromiso?",
+      a: "Ese es exactamente el modelo. La llamada de diagnóstico es gratis. La propuesta técnica viene con un mock con tus datos reales, sin contrato todavía. La mayoría empieza con un solo módulo y escala cuando ve el resultado.",
+    },
+  ];
+
+  const [open, setOpen] = useState(null);
+  const toggle = (i) => setOpen(open === i ? null : i);
+
+  return (
+    <section className="section faq-section" id="faq">
+      <div className="section-head">
+        <div className="section-eyebrow">Preguntas frecuentes</div>
+        <h2 className="section-h2">Las dudas que frenan la decisión.</h2>
+        <p className="section-sub">Respuestas directas, sin marketing.</p>
+      </div>
+      <div className="faq-list">
+        {items.map((item, i) => (
+          <div key={i} className={`faq-item${open === i ? " is-open" : ""}`}>
+            <button className="faq-q" onClick={() => toggle(i)} aria-expanded={open === i}>
+              <span>{item.q}</span>
+              <span className="faq-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            </button>
+            <div className="faq-a" aria-hidden={open !== i}>
+              <div className="faq-a-inner">{item.a}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>);
+}
+
 /* ─── App root ─── */
 function App() {
   const [country, setCountry] = useState(() => {
@@ -817,8 +916,10 @@ function App() {
         <Hero data={data} country={country} waPrefill={waPrefill} />
         <TrustBar data={data} country={country} />
         <DemosShowcase data={data} country={country} />
+        <Process waPrefill={waPrefill} />
         <LeadMagnet data={data} country={country} />
         <WaCta data={data} country={country} waPrefill={waPrefill} />
+        <FAQ />
         <Footer data={data} country={country} />
       </main>
     </>);

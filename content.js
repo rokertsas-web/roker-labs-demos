@@ -7,18 +7,6 @@
 /* ─── Demos navegables en vivo (4 verticales reales) ─── */
 window.DEMOS = [
   {
-    id: "gastro",
-    vertical: "Restaurante · POS",
-    name: "Sabor Criollo",
-    tagline: "Mesas, comanda digital, caja y reportes de ventas por turno. Del celular del mozo al panel del dueño.",
-    url: "https://saborcriollo-demo.pages.dev/",
-    color: "#f59e0b",
-    bgImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=60&auto=format&fit=crop",
-    bgMood: "linear-gradient(135deg, #2a1810dd, #08080bcc)",
-    features: ["Mesas", "Comanda digital", "Caja / cierre", "Reportes diarios", "Multi-turno"],
-    tech: "React · FastAPI · SQLite",
-  },
-  {
     id: "lomiteria",
     vertical: "Restaurante · Salones",
     name: "Lomitería",
@@ -29,6 +17,18 @@ window.DEMOS = [
     bgMood: "linear-gradient(135deg, #2a1a00dd, #08080bcc)",
     features: ["Mesas por salón", "POS táctil", "Delivery live", "Bot WhatsApp reservas", "Panel admin"],
     tech: "React · FastAPI · Fly.io",
+  },
+  {
+    id: "gastro",
+    vertical: "Restaurante · POS",
+    name: "Sabor Criollo",
+    tagline: "Mesas, comanda digital, caja y reportes de ventas por turno. Del celular del mozo al panel del dueño.",
+    url: "https://saborcriollo-demo.pages.dev/",
+    color: "#f59e0b",
+    bgImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=60&auto=format&fit=crop",
+    bgMood: "linear-gradient(135deg, #2a1810dd, #08080bcc)",
+    features: ["Mesas", "Comanda digital", "Caja / cierre", "Reportes diarios", "Multi-turno"],
+    tech: "React · FastAPI · SQLite",
   },
   {
     id: "celulares",

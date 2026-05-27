@@ -77,13 +77,7 @@ function Topbar({ country, setCountry, services }) {
         <a href="#contacto">Contacto</a>
       </nav>
       <div className="topbar-spacer" />
-      <QuickLaunch />
       <CountrySwitch country={country} setCountry={setCountry} />
-      <MagneticButton strength={0.25}>
-        <a className="btn btn--primary btn--pulse" href="#contacto">
-          Agendar demo <TechIcon name="arrow-right" size={16} />
-        </a>
-      </MagneticButton>
     </header>);
 
 }

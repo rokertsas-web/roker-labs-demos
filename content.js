@@ -3,6 +3,71 @@
    AR (default) and PY share the same shape; the consumer reads
    from window.CONTENT[country].
    ─────────────────────────────────────── */
+
+/* ─── Demos navegables en vivo (4 verticales reales) ─── */
+window.DEMOS = [
+  {
+    id: "gastro",
+    vertical: "Restaurante · POS",
+    name: "Sabor Criollo",
+    tagline: "Mesas, comanda digital, caja y reportes de ventas por turno. Del celular del mozo al panel del dueño.",
+    url: "https://saborcriollo-demo.pages.dev/",
+    color: "#f59e0b",
+    bgImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=60&auto=format&fit=crop",
+    bgMood: "linear-gradient(135deg, #2a1810dd, #08080bcc)",
+    features: ["Mesas", "Comanda digital", "Caja / cierre", "Reportes diarios", "Multi-turno"],
+    tech: "React · FastAPI · SQLite",
+  },
+  {
+    id: "celulares",
+    vertical: "Mayorista de Repuestos",
+    name: "FixMobile",
+    tagline: "Gestión mayorista de repuestos para celulares: catálogo, stock, listas de precios y cuenta corriente de técnicos.",
+    url: "https://fixmobile-demo.pages.dev/",
+    color: "#3b82f6",
+    bgImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900&q=60&auto=format&fit=crop",
+    bgMood: "linear-gradient(135deg, #0f192299, #08080bcc)",
+    features: ["Catálogo repuestos", "Stock", "Listas de precios", "Cuenta corriente", "MercadoLibre"],
+    tech: "React · TypeScript",
+  },
+  {
+    id: "concesionaria",
+    vertical: "Concesionaria",
+    name: "CarHub",
+    tagline: "Gestión completa de stock vehicular, tasaciones IA, cotizaciones y panel de vendedores con métricas en tiempo real.",
+    url: "https://carhub-demo.pages.dev/",
+    color: "#ef4444",
+    bgImage: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=60&auto=format&fit=crop",
+    bgMood: "linear-gradient(135deg, #1a0a0a99, #08080bcc)",
+    features: ["Stock de vehículos", "Tasador IA", "Bot Telegram", "Panel admin", "Reportes"],
+    tech: "React · Supabase",
+  },
+  {
+    id: "motos",
+    vertical: "Repuestos de Motos",
+    name: "MotoHub",
+    tagline: "Control de inventario de repuestos, compatibilidades por modelo, alertas de stock bajo y catálogo digital para clientes.",
+    url: "https://motohub-demo.pages.dev/",
+    color: "#10b981",
+    bgImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=60&auto=format&fit=crop",
+    bgMood: "linear-gradient(135deg, #0a1a1299, #08080bcc)",
+    features: ["Inventario", "Por modelo", "Stock bajo", "Catálogo digital", "AR + PY"],
+    tech: "Next.js · R3F · GSAP",
+  },
+  {
+    id: "lomiteria",
+    vertical: "Restaurante · Salones",
+    name: "Lomitería",
+    tagline: "Sistema completo con mesas por salón, delivery en tiempo real y bot WhatsApp para reservas automáticas.",
+    url: "https://lyl-restaurante.fly.dev/",
+    color: "#f59e0b",
+    bgImage: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=60&auto=format&fit=crop",
+    bgMood: "linear-gradient(135deg, #2a1a0099, #08080bcc)",
+    features: ["Mesas por salón", "POS táctil", "Delivery live", "Bot WhatsApp reservas", "Panel admin"],
+    tech: "React · FastAPI · Fly.io",
+  },
+];
+
 window.CATEGORIES = [
   {
     id: "tactica",
@@ -253,7 +318,7 @@ window.CONTENT = {
     footer: {
       tagline: "Trabajo con PyMEs argentinas que necesitan software real, no plantillas.",
       address: "Argentina · trabajando con Paraguay",
-      cuit: "CUIT 20-XX-XXXX-X",
+      cuit: "Factura A · rokertsas@gmail.com",
     },
   },
 
@@ -503,7 +568,7 @@ window.CONTENT = {
     footer: {
       tagline: "Trabajo con clientes en Argentina y Paraguay.",
       address: "Argentina · trabajando con Paraguay",
-      cuit: "CUIT 20-XX-XXXX-X",
+      cuit: "Factura A · rokertsas@gmail.com",
     },
   },
 };

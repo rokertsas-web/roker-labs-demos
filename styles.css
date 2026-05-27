@@ -1708,9 +1708,10 @@ body::after {
 /* Backdrop + Panel */
 .ql-backdrop {
   position: fixed; inset: 0;
-  background: rgba(7,9,13,0.55);
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  /* Sin backdrop-filter: mix-blend-mode del grain (body::after z-9999)
+     provoca que Chrome/Windows no pueda capturar el backdrop → negro.
+     Overlay oscuro sólido funciona igual de bien en todos los sistemas. */
+  background: rgba(7,9,13,0.68);
   z-index: 200;
   animation: ql-back-in 220ms var(--ease-out);
 }
@@ -1853,6 +1854,20 @@ body::after {
   background: rgba(34,211,238,0.10);
   box-shadow: inset 0 0 0 1px rgba(34,211,238,0.30);
 }
+.ql-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.ql-badge--live {
+  color: #4ade80;
+  background: rgba(74,222,128,0.12);
+  box-shadow: inset 0 0 0 1px rgba(74,222,128,0.30);
+}
 .ql-item-launch {
   display: inline-flex; align-items: center; justify-content: center;
   width: 28px; height: 28px;
@@ -1911,9 +1926,11 @@ html {
 }
 
 body {
-  /* Bloquear pull-to-refresh y bounce horizontal sin romper scroll vertical */
-  overscroll-behavior-y: contain;
-  overscroll-behavior-x: none;
+  /* overscroll-behavior-y: contain causaba que el touchpad de 2 dedos
+     no funcionara en Windows Chrome — Chrome enruta los eventos del precision
+     touchpad diferente que Mac y el contain los absorbe.
+     overscroll-behavior: auto = comportamiento nativo de cada plataforma. */
+  overscroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -2000,6 +2017,286 @@ a, button, [role="button"], .btn, .cell, .topbar-nav a, .lookup-item {
     max-width: none;
   }
 }
+
+/* ─── Demos showcase — magazine cards con foto real ──────────────────────── */
+.demos-section {
+  padding: var(--space-12) var(--page-pad);
+}
+
+/* Mobile-first: 1 col → 2 col tablet */
+.demos-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: var(--space-8);
+}
+
+/* Card base */
+.demo-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(14, 14, 22, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+@media (hover: hover) {
+  .demo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    border-color: var(--demo-color, rgba(255, 255, 255, 0.18));
+  }
+}
+
+.demo-card:active {
+  transform: scale(0.985);
+}
+
+.demo-card:focus-visible {
+  outline: 2px solid var(--demo-color, var(--crimson-500));
+  outline-offset: 3px;
+}
+
+/* Foto de fondo — ocupa el tercio superior de la card */
+.demo-card__photo {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Fade photo → card body */
+.demo-card__photo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, rgba(14, 14, 22, 0.98));
+}
+
+/* Body: todo el contenido texto */
+.demo-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px 20px;
+  flex: 1;
+}
+
+/* Eyebrow: dot + vertical label */
+.demo-card__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  line-height: 1;
+}
+
+.demo-card__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Nombre grande del demo */
+.demo-card__name {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--fg-0);
+  margin: 0;
+  line-height: 1.1;
+}
+
+/* Descripción */
+.demo-card__desc {
+  font-size: 13px;
+  color: var(--fg-2);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Feature chips */
+.demo-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.demo-card__chip {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: var(--fg-2);
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+/* Footer: tech + CTA */
+.demo-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  margin-top: auto;
+  gap: 12px;
+  /* meets 44px touch target */
+  min-height: 44px;
+}
+
+.demo-card__tech {
+  font-size: 11px;
+  color: var(--fg-4);
+  font-family: ui-monospace, "Cascadia Code", "SF Mono", monospace;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-card__cta {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.01em;
+}
+
+/* Tablet (≥640px): 2 columnas */
+@media (min-width: 640px) {
+  .demos-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+/* Desktop (≥1024px): foto más alta */
+@media (min-width: 1024px) {
+  .demo-card__photo {
+    height: 240px;
+  }
+  .demo-card__name {
+    font-size: 24px;
+  }
+  .demo-card__body {
+    padding: 20px 24px 24px;
+  }
+}
+
+/* ─── Sticky mobile WA bar ─── */
+.wa-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  background: rgba(9,11,16,0.96);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.55);
+  transform: translateY(110%);
+  transition: transform 400ms cubic-bezier(0.16,1,0.3,1);
+}
+.wa-sticky.is-visible { transform: translateY(0); }
+
+.wa-sticky__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 340px;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: #25D366;
+  color: #fff;
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  justify-content: center;
+  box-shadow: 0 8px 24px -4px rgba(37,211,102,0.45);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.wa-sticky__btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 12px -2px rgba(37,211,102,0.3);
+}
+
+.wa-sticky__note {
+  font-size: 11px;
+  color: var(--fg-4);
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.wa-sticky__close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  color: var(--fg-4);
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Desktop: ocultar sticky bar por completo */
+@media (min-width: 769px) {
+  .wa-sticky { display: none !important; }
+}
+
+/* Mobile: espacio extra al pie para que el sticky bar no tape el footer */
+@media (max-width: 768px) {
+  .page { padding-bottom: max(100px, calc(env(safe-area-inset-bottom) + 96px)); }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── */
 
 /* Respetar prefers-reduced-motion para usuarios con sensibilidad vestibular */
 @media (prefers-reduced-motion: reduce) {

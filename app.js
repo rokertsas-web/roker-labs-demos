@@ -1,7 +1,8 @@
-(() => {
-  const { useState, useEffect, useRef, useCallback, useMemo } = React;
-  const COOKIE_NAME = "roker_country";
-  const COOKIE_DAYS = 30;
+var AppBundle = (() => {
+  // app.jsx
+  var { useState, useEffect, useRef, useCallback, useMemo } = React;
+  var COOKIE_NAME = "roker_country";
+  var COOKIE_DAYS = 30;
   function getCookie(name) {
     const m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
     return m ? decodeURIComponent(m[1]) : null;
@@ -47,7 +48,7 @@
     return /* @__PURE__ */ React.createElement("span", { ref: wrapRef, className: "mag-wrap", onMouseMove: onMove, onMouseLeave: onLeave, ...rest }, /* @__PURE__ */ React.createElement("span", { ref: innerRef, className: "mag-inner" }, children));
   }
   function Topbar({ country, setCountry, services }) {
-    return /* @__PURE__ */ React.createElement("header", { className: "topbar" }, /* @__PURE__ */ React.createElement("div", { className: "topbar-brand" }, /* @__PURE__ */ React.createElement("span", { className: "dot" }), "ROKER ", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--crimson-500)" } }, "LABS")), /* @__PURE__ */ React.createElement("nav", { className: "topbar-nav" }, /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Sistemas"), /* @__PURE__ */ React.createElement("a", { href: "#analisis" }, "An\xE1lisis gratis"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "Contacto")), /* @__PURE__ */ React.createElement("div", { className: "topbar-spacer" }), /* @__PURE__ */ React.createElement(QuickLaunch, { services }), /* @__PURE__ */ React.createElement(CountrySwitch, { country, setCountry }), /* @__PURE__ */ React.createElement(MagneticButton, { strength: 0.25 }, /* @__PURE__ */ React.createElement("a", { className: "btn btn--primary btn--pulse", href: "#contacto" }, "Agendar demo ", /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-right", size: 16 }))));
+    return /* @__PURE__ */ React.createElement("header", { className: "topbar" }, /* @__PURE__ */ React.createElement("div", { className: "topbar-brand" }, /* @__PURE__ */ React.createElement("span", { className: "dot" }), "ROKER ", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--crimson-500)" } }, "LABS")), /* @__PURE__ */ React.createElement("nav", { className: "topbar-nav" }, /* @__PURE__ */ React.createElement("a", { href: "#demos" }, "Sistemas"), /* @__PURE__ */ React.createElement("a", { href: "#analisis" }, "An\xE1lisis gratis"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "Contacto")), /* @__PURE__ */ React.createElement("div", { className: "topbar-spacer" }), /* @__PURE__ */ React.createElement(QuickLaunch, null), /* @__PURE__ */ React.createElement(CountrySwitch, { country, setCountry }), /* @__PURE__ */ React.createElement(MagneticButton, { strength: 0.25 }, /* @__PURE__ */ React.createElement("a", { className: "btn btn--primary btn--pulse", href: "#contacto" }, "Agendar demo ", /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-right", size: 16 }))));
   }
   function CountrySwitch({ country, setCountry }) {
     return /* @__PURE__ */ React.createElement("div", { className: "country-switch", role: "group", "aria-label": "Seleccionar pa\xEDs" }, ["AR", "PY"].map(
@@ -65,30 +66,24 @@
       )
     ));
   }
-  function QuickLaunch({ services }) {
+  function QuickLaunch() {
     const [open, setOpen] = useState(false);
     const [filter, setFilter] = useState("");
     const [activeIdx, setActiveIdx] = useState(0);
     const inputRef = useRef(null);
-    const listRef = useRef(null);
-    const cats = window.CATEGORIES;
+    const isMac = useMemo(
+      () => typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent),
+      []
+    );
+    const kbdLabel = isMac ? "\u2318K" : "Ctrl+K";
+    const allDemos = window.DEMOS || [];
     const filtered = useMemo(() => {
       const q = filter.trim().toLowerCase();
-      return services.filter(
-        (s) => !q || s.title.toLowerCase().includes(q) || (s.tag || "").toLowerCase().includes(q) || s.id.includes(q)
+      return allDemos.filter(
+        (d) => !q || d.name.toLowerCase().includes(q) || d.vertical.toLowerCase().includes(q) || d.id.includes(q)
       );
-    }, [services, filter]);
-    const grouped = useMemo(() => {
-      const map = {};
-      cats.forEach((c) => {
-        map[c.id] = [];
-      });
-      filtered.forEach((s) => {
-        (map[s.cat] = map[s.cat] || []).push(s);
-      });
-      return cats.map((c) => ({ ...c, items: map[c.id] || [] })).filter((c) => c.items.length);
-    }, [filtered, cats]);
-    const flat = useMemo(() => grouped.flatMap((g) => g.items), [grouped]);
+    }, [allDemos, filter]);
+    const flat = filtered;
     useEffect(() => {
       const onKey = (e) => {
         const isOpenKey = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
@@ -106,7 +101,7 @@
         } else if (open && e.key === "Enter") {
           e.preventDefault();
           const item = flat[activeIdx];
-          if (item && item.demoUrl) window.open(item.demoUrl, "_blank");
+          if (item && item.url) window.open(item.url, "_blank");
         }
       };
       window.addEventListener("keydown", onKey);
@@ -131,7 +126,7 @@
       },
       /* @__PURE__ */ React.createElement("span", { className: "ql-grid", "aria-hidden": "true" }, [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => /* @__PURE__ */ React.createElement("span", { key: i }))),
       /* @__PURE__ */ React.createElement("span", { className: "ql-trigger-label" }, "Demos"),
-      /* @__PURE__ */ React.createElement("span", { className: "ql-kbd" }, "\u2318K")
+      /* @__PURE__ */ React.createElement("span", { className: "ql-kbd" }, kbdLabel)
     ), open && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "ql-backdrop", onClick: () => setOpen(false) }), /* @__PURE__ */ React.createElement("div", { className: "ql-panel", role: "dialog", "aria-label": "Lanzador de demos" }, /* @__PURE__ */ React.createElement("div", { className: "ql-search" }, /* @__PURE__ */ React.createElement(TechIcon, { name: "search", size: 18 }), /* @__PURE__ */ React.createElement(
       "input",
       {
@@ -140,32 +135,28 @@
         onChange: (e) => setFilter(e.target.value),
         placeholder: "Buscar sistema \xB7 POS, Dashboard, SIFEN..."
       }
-    ), /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "esc")), /* @__PURE__ */ React.createElement("div", { className: "ql-list", ref: listRef }, grouped.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "ql-empty" }, "Sin resultados para \xAB", filter, "\xBB"), grouped.map(
-      (g) => /* @__PURE__ */ React.createElement("div", { className: "ql-group", key: g.id }, /* @__PURE__ */ React.createElement("div", { className: "ql-group-head" }, /* @__PURE__ */ React.createElement(TechIcon, { name: g.icon, size: 12 }), g.label, /* @__PURE__ */ React.createElement("span", { className: "ql-group-count" }, g.items.length)), g.items.map((s) => {
-        const flatIdx = flat.indexOf(s);
-        const isActive = flatIdx === activeIdx;
-        return /* @__PURE__ */ React.createElement(
-          "a",
-          {
-            key: s.id,
-            href: s.demoUrl || "#",
-            target: "_blank",
-            rel: "noopener noreferrer",
-            className: `ql-item ${isActive ? "is-active" : ""}`,
-            onMouseEnter: () => setActiveIdx(flatIdx),
-            onClick: () => setOpen(false)
-          },
-          /* @__PURE__ */ React.createElement("span", { className: "ql-item-icon" }, /* @__PURE__ */ React.createElement(TechIcon, { name: s.icon, size: 16 })),
-          /* @__PURE__ */ React.createElement("span", { className: "ql-item-body" }, /* @__PURE__ */ React.createElement("span", { className: "ql-item-title" }, s.title), /* @__PURE__ */ React.createElement("span", { className: "ql-item-url" }, (s.demoUrl || "").replace("https://", ""))),
-          s.tag && /* @__PURE__ */ React.createElement("span", { className: `ql-item-tag${s.tagPY ? " is-py" : ""}` }, s.tag),
-          /* @__PURE__ */ React.createElement("span", { className: "ql-item-launch" }, /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-right", size: 14 }))
-        );
-      }))
-    )), /* @__PURE__ */ React.createElement("div", { className: "ql-foot" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "\u2191\u2193"), " navegar"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "\u21B5"), " lanzar"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "esc"), " cerrar"), /* @__PURE__ */ React.createElement("span", { className: "ql-foot-spacer" }), /* @__PURE__ */ React.createElement("span", { className: "ql-foot-meta" }, flat.length, " sistemas activos")))));
+    ), /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "esc")), /* @__PURE__ */ React.createElement("div", { className: "ql-list", ref: listRef }, /* @__PURE__ */ React.createElement("div", { className: "ql-group-head" }, /* @__PURE__ */ React.createElement(TechIcon, { name: "bolt", size: 12 }), "Demos en vivo", /* @__PURE__ */ React.createElement("span", { className: "ql-group-count" }, filtered.length)), filtered.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "ql-empty" }, "Sin resultados para \xAB", filter, "\xBB"), filtered.map(
+      (d, i) => /* @__PURE__ */ React.createElement(
+        "a",
+        {
+          key: d.id,
+          href: d.url,
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: `ql-item ${i === activeIdx ? "is-active" : ""}`,
+          onMouseEnter: () => setActiveIdx(i),
+          onClick: () => setOpen(false)
+        },
+        /* @__PURE__ */ React.createElement("span", { className: "ql-item-icon", style: { display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ React.createElement("span", { style: { width: 10, height: 10, borderRadius: "50%", background: d.color, boxShadow: `0 0 8px ${d.color}80` } })),
+        /* @__PURE__ */ React.createElement("span", { className: "ql-item-body" }, /* @__PURE__ */ React.createElement("span", { className: "ql-item-title" }, d.name), /* @__PURE__ */ React.createElement("span", { className: "ql-item-url" }, d.vertical, " \xB7 ", d.url.replace("https://", ""))),
+        /* @__PURE__ */ React.createElement("span", { className: "ql-badge ql-badge--live" }, "LIVE"),
+        /* @__PURE__ */ React.createElement("span", { className: "ql-item-launch" }, /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-right", size: 14 }))
+      )
+    )), /* @__PURE__ */ React.createElement("div", { className: "ql-foot" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "\u2191\u2193"), " navegar"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "\u21B5"), " lanzar"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("span", { className: "ql-kbd ql-kbd--inline" }, "esc"), " cerrar"), /* @__PURE__ */ React.createElement("span", { className: "ql-foot-spacer" }), /* @__PURE__ */ React.createElement("span", { className: "ql-foot-meta" }, "5 demos en vivo")))));
   }
   function Hero({ data, country, waPrefill }) {
     const h = data.hero;
-    return /* @__PURE__ */ React.createElement("section", { className: "hero", id: "top" }, /* @__PURE__ */ React.createElement("div", { className: "flow-blob flow-blob--cta" }), /* @__PURE__ */ React.createElement("div", { className: "hero-text", "data-country-content": true, key: "hero-" + country }, /* @__PURE__ */ React.createElement("span", { className: "hero-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "pulse-dot" }), h.eyebrowDot), /* @__PURE__ */ React.createElement("h1", { className: "hero-h1" }, h.h1Pre, " ", /* @__PURE__ */ React.createElement("span", { className: "strike" }, h.h1Strike), " ", h.h1Post, " ", /* @__PURE__ */ React.createElement("span", { className: "accent" }, h.h1Accent)), /* @__PURE__ */ React.createElement("p", { className: "hero-sub" }, h.sub), /* @__PURE__ */ React.createElement("div", { className: "hero-ctas" }, /* @__PURE__ */ React.createElement(MagneticButton, { strength: 0.3 }, /* @__PURE__ */ React.createElement("a", { className: "btn btn--lg btn--primary btn--pulse", href: waPrefill("una demo de tus sistemas") }, h.cta1, " ", /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-right", size: 18 }))), /* @__PURE__ */ React.createElement("a", { className: "btn btn--lg btn--ghost", href: "#servicios" }, h.cta2)), /* @__PURE__ */ React.createElement("div", { className: "hero-meta" }, h.kpis.map(
+    return /* @__PURE__ */ React.createElement("section", { className: "hero", id: "top" }, /* @__PURE__ */ React.createElement("div", { className: "flow-blob flow-blob--cta" }), /* @__PURE__ */ React.createElement("div", { className: "hero-text", "data-country-content": true, key: "hero-" + country }, /* @__PURE__ */ React.createElement("span", { className: "hero-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "pulse-dot" }), h.eyebrowDot), /* @__PURE__ */ React.createElement("h1", { className: "hero-h1" }, h.h1Pre, " ", /* @__PURE__ */ React.createElement("span", { className: "strike" }, h.h1Strike), " ", h.h1Post, " ", /* @__PURE__ */ React.createElement("span", { className: "accent" }, h.h1Accent)), /* @__PURE__ */ React.createElement("p", { className: "hero-sub" }, h.sub), /* @__PURE__ */ React.createElement("div", { className: "hero-ctas" }, /* @__PURE__ */ React.createElement(MagneticButton, { strength: 0.3 }, /* @__PURE__ */ React.createElement("a", { className: "btn btn--lg btn--primary btn--pulse", href: waPrefill("una demo de tus sistemas") }, h.cta1, " ", /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-right", size: 18 }))), /* @__PURE__ */ React.createElement("a", { className: "btn btn--lg btn--ghost", href: "#demos" }, h.cta2)), /* @__PURE__ */ React.createElement("div", { className: "hero-meta" }, h.kpis.map(
       (k, i) => /* @__PURE__ */ React.createElement(React.Fragment, { key: i }, i > 0 && /* @__PURE__ */ React.createElement("span", { className: "dot-sep" }, "\xB7"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("strong", { style: { color: "var(--fg-0)", fontWeight: 700, marginRight: 6 } }, k.v), k.l))
     ))), /* @__PURE__ */ React.createElement(HeroVisual, { country }));
   }
@@ -179,161 +170,30 @@
       (s, i) => /* @__PURE__ */ React.createElement("div", { className: "trust-stat", key: i }, /* @__PURE__ */ React.createElement("span", { className: "v" }, s.v), /* @__PURE__ */ React.createElement("span", { className: "l" }, s.l))
     )));
   }
-  function Bento({ data, country, bankList, waPrefill }) {
-    const tabs = window.CATEGORIES;
-    const [tab, setTab] = useState(tabs[0].id);
-    const counts = useMemo(() => {
-      const c = {};
-      tabs.forEach((t) => {
-        c[t.id] = data.services.filter((s) => s.cat === t.id).length;
-      });
-      return c;
-    }, [data, tabs]);
-    const visible = data.services.filter((s) => s.cat === tab);
-    const active = tabs.find((t) => t.id === tab) || tabs[0];
-    const total = data.services.length;
-    return /* @__PURE__ */ React.createElement("section", { className: "section", id: "servicios" }, /* @__PURE__ */ React.createElement("div", { className: "section-head", "data-country-content": true, key: "head-" + country }, /* @__PURE__ */ React.createElement("div", { className: "section-eyebrow" }, data.bento.eyebrow), /* @__PURE__ */ React.createElement("h2", { className: "section-h2" }, data.bento.h2), /* @__PURE__ */ React.createElement("p", { className: "section-sub" }, data.bento.sub)), /* @__PURE__ */ React.createElement("div", { className: "tabs-row" }, /* @__PURE__ */ React.createElement("div", { className: "tab-shell", role: "tablist" }, tabs.map(
-      (t) => /* @__PURE__ */ React.createElement(
-        "button",
-        {
-          key: t.id,
-          role: "tab",
-          "aria-selected": tab === t.id,
-          className: `tab ${tab === t.id ? "is-active" : ""}`,
-          onClick: () => setTab(t.id)
-        },
-        t.short,
-        /* @__PURE__ */ React.createElement("span", { className: "count" }, counts[t.id] || 0)
-      )
-    )), /* @__PURE__ */ React.createElement("span", { className: "tab-meta" }, /* @__PURE__ */ React.createElement("strong", null, visible.length), " de ", /* @__PURE__ */ React.createElement("strong", null, total), " servicios \xB7 ", country === "PY" ? "Paraguay" : "Argentina")), /* @__PURE__ */ React.createElement("p", { className: "tab-desc", key: "tabdesc-" + tab + "-" + country }, active.desc), /* @__PURE__ */ React.createElement("div", { className: "bento bento--tabbed cascade", key: "bento-" + country + "-" + tab }, visible.map(
-      (s) => /* @__PURE__ */ React.createElement(
-        ServiceCell,
-        {
-          key: s.id,
-          svc: { ...s, size: tabbedSize(s) },
-          country,
-          bankList,
-          waPrefill
-        }
-      )
-    )));
-  }
-  function tabbedSize(svc) {
-    if (svc.mock === "pos" || svc.mock === "dash") return "w3 h2";
-    if (svc.id === "mp" || svc.id === "billeteras") return "w3 h2";
-    return "w3";
-  }
-  function ServiceCell({ svc, country, bankList, waPrefill }) {
-    const sizeClasses = (svc.size || "w2").split(" ").map((s) => `cell--${s}`).join(" ");
-    const hasPhoto = !!svc.bgImage;
-    const [revealed, setRevealed] = useState(false);
-    const onCardClick = (e) => {
-      if (e.target.closest("a, button")) return;
-      setRevealed((r) => !r);
-    };
-    const launchHref = svc.demoUrl || waPrefill(svc.title);
-    const launchInNewTab = !!svc.demoUrl;
-    return /* @__PURE__ */ React.createElement(
-      "article",
-      {
-        className: `cell ${sizeClasses}${svc.brand ? " cell--brand" : ""}${hasPhoto ? " cell--photo" : ""}${revealed ? " is-revealed" : ""}`,
-        onClick: onCardClick
-      },
-      hasPhoto && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(
-        "div",
-        {
-          className: "cell-bg",
-          style: { backgroundImage: `${svc.bgMood ? svc.bgMood + ", " : ""}url("${svc.bgImage}")` },
-          "aria-hidden": "true"
-        }
-      ), /* @__PURE__ */ React.createElement("div", { className: "cell-bg-overlay", "aria-hidden": "true" })),
-      /* @__PURE__ */ React.createElement("div", { className: "cell-head" }, /* @__PURE__ */ React.createElement("span", { className: "cell-icon" }, /* @__PURE__ */ React.createElement(TechIcon, { name: svc.icon, size: 20 })), /* @__PURE__ */ React.createElement("span", { className: "cell-live-badge", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("span", { className: "ld" }), " LIVE"), svc.tag && /* @__PURE__ */ React.createElement("span", { className: `cell-tag${svc.tagPY ? " cell-tag--py" : svc.isNew ? " cell-tag--new" : ""}` }, svc.isNew ? "Nuevo \xB7 " : "", svc.tag)),
-      /* @__PURE__ */ React.createElement("h3", { className: "cell-title" }, svc.title),
-      /* @__PURE__ */ React.createElement("div", { className: "cell-body" }, /* @__PURE__ */ React.createElement("p", { className: "cell-desc" }, svc.desc), /* @__PURE__ */ React.createElement("div", { className: "cell-live", "aria-hidden": !revealed }, /* @__PURE__ */ React.createElement(LivePreview, { svc, country, bankList }))),
-      /* @__PURE__ */ React.createElement("div", { className: "cell-launch-wrap" }, svc.price && /* @__PURE__ */ React.createElement("span", { className: "cell-price" }, svc.price, svc.priceNote && /* @__PURE__ */ React.createElement("em", null, " \xB7 ", svc.priceNote)), /* @__PURE__ */ React.createElement(
+  function DemosShowcase({ data, country }) {
+    const demos = window.DEMOS || [];
+    return /* @__PURE__ */ React.createElement("section", { className: "section demos-section", id: "demos" }, /* @__PURE__ */ React.createElement("div", { className: "section-head", "data-country-content": true, key: "dhead-" + country }, /* @__PURE__ */ React.createElement("div", { className: "section-eyebrow" }, "Demos navegables en vivo"), /* @__PURE__ */ React.createElement("h2", { className: "section-h2" }, "5 sistemas reales. Toc\xE1 y prob\xE1."), /* @__PURE__ */ React.createElement("p", { className: "section-sub" }, "No son mockups de Figma. Son sistemas deployados que pod\xE9s navegar ahora desde cualquier dispositivo \u2014 celular, tablet o computadora.")), /* @__PURE__ */ React.createElement("div", { className: "demos-grid" }, demos.map(
+      (demo) => /* @__PURE__ */ React.createElement(
         "a",
         {
-          className: "launch-btn",
-          href: launchHref,
-          target: launchInNewTab ? "_blank" : void 0,
-          rel: launchInNewTab ? "noopener noreferrer" : void 0
+          key: demo.id,
+          className: "demo-card",
+          href: demo.url,
+          target: "_blank",
+          rel: "noopener noreferrer",
+          style: { "--demo-color": demo.color }
         },
-        "Lanzar sistema en vivo",
-        /* @__PURE__ */ React.createElement("span", { className: "launch-arrow", "aria-hidden": "true" }, "\u2197")
-      ))
-    );
-  }
-  function LivePreview({ svc, country, bankList }) {
-    if (svc.mock === "pos") return /* @__PURE__ */ React.createElement(PosLive, { country, svc });
-    if (svc.mock === "dash") return /* @__PURE__ */ React.createElement(DashLive, { country, svc });
-    if (svc.mock === "chat") return /* @__PURE__ */ React.createElement(ChatLive, { country, svc });
-    if (svc.mock === "catalog") return /* @__PURE__ */ React.createElement(CatalogLive, { svc });
-    if (svc.id === "mp" || svc.id === "billeteras") return /* @__PURE__ */ React.createElement(BankLive, { bankList, svc });
-    return /* @__PURE__ */ React.createElement(ConsoleLive, { svc, country });
-  }
-  function liveFrame(host, children) {
-    return /* @__PURE__ */ React.createElement("div", { className: "live-frame" }, /* @__PURE__ */ React.createElement("div", { className: "device-bar" }, /* @__PURE__ */ React.createElement("span", { className: "traffic" }), /* @__PURE__ */ React.createElement("span", { className: "traffic" }), /* @__PURE__ */ React.createElement("span", { className: "traffic" }), /* @__PURE__ */ React.createElement("span", { className: "url" }, host), /* @__PURE__ */ React.createElement("span", { className: "device-live" }, /* @__PURE__ */ React.createElement("span", { className: "ld" }), " LIVE")), /* @__PURE__ */ React.createElement("div", { className: "live-body" }, children));
-  }
-  function PosLive({ country, svc }) {
-    return liveFrame(country === "PY" ? "saborcriollo-demo.pages.dev" : "saborcriollo-demo.pages.dev", /* @__PURE__ */ React.createElement(PosMock, { country }));
-  }
-  function DashLive({ country, svc }) {
-    return liveFrame("carhub-demo.pages.dev", /* @__PURE__ */ React.createElement(DashMock, { country }));
-  }
-  function ChatLive({ country, svc }) {
-    return liveFrame("fixmobile-demo.pages.dev", /* @__PURE__ */ React.createElement(ChatMock, { country }));
-  }
-  function CatalogLive({ svc }) {
-    return liveFrame("motohub-demo.pages.dev", /* @__PURE__ */ React.createElement(CatalogMock, null));
-  }
-  function ConsoleLive({ svc, country }) {
-    return liveFrame("roker-labs-demos.pages.dev/" + svc.id, /* @__PURE__ */ React.createElement(ConsoleMock, { service: svc, country }));
-  }
-  function BankLive({ bankList, svc }) {
-    return liveFrame(
-      "roker-labs-demos.pages.dev/" + svc.id,
-      /* @__PURE__ */ React.createElement("div", { className: "bank-grid bank-grid--live" }, bankList.map((b) => {
-        const c = bankColor(b);
-        return /* @__PURE__ */ React.createElement("div", { className: "bank-chip", key: b, style: {
-          background: `linear-gradient(135deg, ${hexAlpha(c, 0.22)} 0%, ${hexAlpha(c, 0.02)} 70%), rgba(255,255,255,0.025)`,
-          ["--bank-accent"]: c
-        } }, /* @__PURE__ */ React.createElement("div", { className: "top" }, /* @__PURE__ */ React.createElement("span", { className: "swatch", style: { background: c, boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.18), 0 0 10px -2px ${c}` } }), /* @__PURE__ */ React.createElement("span", { className: "name" }, b)), /* @__PURE__ */ React.createElement("span", { className: "meta" }, bankMeta(b)));
-      }))
-    );
-  }
-  function bankColor(name) {
-    const map = {
-      "Galicia": "#F59E0B",
-      "Santander": "#F43F5E",
-      "BBVA": "#3B82F6",
-      "Mercado Pago": "#22D3EE",
-      "Bancard": "#3B82F6",
-      "Tigo Money": "#22D3EE",
-      "Personal Pay": "#A855F7",
-      "Wally": "#F59E0B"
-    };
-    return map[name] || "rgba(255,255,255,0.2)";
-  }
-  function bankMeta(name) {
-    const m = {
-      "Galicia": "Tarjetas \xB7 QR",
-      "Santander": "Tarjetas \xB7 QR",
-      "BBVA": "Tarjetas \xB7 QR",
-      "Mercado Pago": "QR \xB7 link \xB7 point",
-      "Bancard": "POS \xB7 QR",
-      "Tigo Money": "Billetera \xB7 QR",
-      "Personal Pay": "Billetera \xB7 QR",
-      "Wally": "Billetera \xB7 QR"
-    };
-    return m[name] || "";
-  }
-  function hexAlpha(hex, a) {
-    if (!hex || !hex.startsWith("#")) return hex;
-    const h = hex.replace("#", "");
-    const r = parseInt(h.slice(0, 2), 16);
-    const g = parseInt(h.slice(2, 4), 16);
-    const b = parseInt(h.slice(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${a})`;
+        /* @__PURE__ */ React.createElement(
+          "div",
+          {
+            className: "demo-card__photo",
+            style: { backgroundImage: `${demo.bgMood}, url("${demo.bgImage}")` },
+            "aria-hidden": "true"
+          }
+        ),
+        /* @__PURE__ */ React.createElement("div", { className: "demo-card__body" }, /* @__PURE__ */ React.createElement("div", { className: "demo-card__eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "demo-card__dot", style: { background: demo.color }, "aria-hidden": "true" }), demo.vertical), /* @__PURE__ */ React.createElement("h3", { className: "demo-card__name" }, demo.name), /* @__PURE__ */ React.createElement("p", { className: "demo-card__desc" }, demo.tagline), /* @__PURE__ */ React.createElement("div", { className: "demo-card__chips" }, demo.features.map((f) => /* @__PURE__ */ React.createElement("span", { key: f, className: "demo-card__chip" }, f))), /* @__PURE__ */ React.createElement("div", { className: "demo-card__footer" }, /* @__PURE__ */ React.createElement("span", { className: "demo-card__tech" }, demo.tech), /* @__PURE__ */ React.createElement("span", { className: "demo-card__cta", style: { color: demo.color } }, "Ver sistema \u2192")))
+      )
+    )));
   }
   function LeadMagnet({ data, country }) {
     const lm = data.leadMagnet;
@@ -357,9 +217,9 @@
     ), /* @__PURE__ */ React.createElement("div", { className: "dropzone", onClick: () => inputRef.current?.click() }, /* @__PURE__ */ React.createElement("span", { className: "ico" }, /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-up", size: 22 })), /* @__PURE__ */ React.createElement("span", { className: "hint" }, /* @__PURE__ */ React.createElement("strong", null, fileName || "Arrastr\xE1 tu Excel ac\xE1"), " ", !fileName && /* @__PURE__ */ React.createElement("span", { style: { color: "var(--fg-4)" } }, "o toc\xE1 para elegir archivo")), /* @__PURE__ */ React.createElement("span", { className: "sub" }, lm.hint)), /* @__PURE__ */ React.createElement("div", { className: "field", style: { marginTop: 4 } }, /* @__PURE__ */ React.createElement(TechIcon, { name: "user", size: 16 }), /* @__PURE__ */ React.createElement("input", { placeholder: "Nombre + email \xB7 WhatsApp si prefer\xEDs" })), /* @__PURE__ */ React.createElement(MagneticButton, { strength: 0.25 }, /* @__PURE__ */ React.createElement("button", { type: "submit", className: "btn btn--primary btn--lg btn--pulse", style: { width: "100%", justifyContent: "center" } }, lm.cta, " ", /* @__PURE__ */ React.createElement(TechIcon, { name: "arrow-right", size: 18 }))))));
   }
   function WaCta({ data, country, waPrefill }) {
-    return /* @__PURE__ */ React.createElement("section", { className: "wa-cta", id: "contacto", "data-country-content": true, key: "wa-" + country }, /* @__PURE__ */ React.createElement("div", { className: "wa-card" }, /* @__PURE__ */ React.createElement("div", { className: "section-eyebrow" }, "Contacto directo"), /* @__PURE__ */ React.createElement("h2", { className: "wa-h" }, data.wa.h), /* @__PURE__ */ React.createElement("p", { className: "wa-sub" }, data.wa.sub), /* @__PURE__ */ React.createElement(MagneticButton, { strength: 0.25 }, /* @__PURE__ */ React.createElement("a", { className: "btn--wa", href: waPrefill() }, /* @__PURE__ */ React.createElement(TechIcon, { name: "whatsapp", size: 20 }), data.wa.btn)), /* @__PURE__ */ React.createElement("p", { style: { marginTop: 16, fontSize: 12, color: "var(--fg-4)", letterSpacing: "0.02em" } }, data.wa.phone, " \xB7 respondo en horario de oficina \xB7 espa\xF1ol rioplatense")), /* @__PURE__ */ React.createElement("div", { className: "glass", style: { padding: 28, display: "flex", flexDirection: "column", gap: 14 } }, /* @__PURE__ */ React.createElement("div", { className: "section-eyebrow" }, "C\xF3mo trabajamos"), [
+    return /* @__PURE__ */ React.createElement("section", { className: "wa-cta", id: "contacto", "data-country-content": true, key: "wa-" + country }, /* @__PURE__ */ React.createElement("div", { className: "wa-card" }, /* @__PURE__ */ React.createElement("div", { className: "section-eyebrow" }, "Contacto directo"), /* @__PURE__ */ React.createElement("h2", { className: "wa-h" }, data.wa.h), /* @__PURE__ */ React.createElement("p", { className: "wa-sub" }, data.wa.sub), /* @__PURE__ */ React.createElement(MagneticButton, { strength: 0.25 }, /* @__PURE__ */ React.createElement("a", { className: "btn--wa", href: waPrefill() }, /* @__PURE__ */ React.createElement(TechIcon, { name: "whatsapp", size: 20 }), data.wa.btn)), /* @__PURE__ */ React.createElement("p", { style: { marginTop: 16, fontSize: 12, color: "var(--fg-4)", letterSpacing: "0.02em" } }, data.wa.phone, " \xB7 AR + PY")), /* @__PURE__ */ React.createElement("div", { className: "glass", style: { padding: 28, display: "flex", flexDirection: "column", gap: 14 } }, /* @__PURE__ */ React.createElement("div", { className: "section-eyebrow" }, "C\xF3mo trabajamos"), [
       { n: "01", t: "Llamada de 25 min", d: "Vemos tu operaci\xF3n actual y los puntos de fricci\xF3n." },
-      { n: "02", t: "Prototipo en 48hs", d: "Un mock funcional con tus datos reales. Sin contratos todav\xEDa." },
+      { n: "02", t: "Propuesta t\xE9cnica en 48hs", d: "Un mock funcional con tus datos reales. Sin contratos todav\xEDa." },
       { n: "03", t: "Implementaci\xF3n en 30 d\xEDas", d: "Sistema en producci\xF3n, capacitaci\xF3n al equipo, soporte directo." }
     ].map(
       (step) => /* @__PURE__ */ React.createElement("div", { key: step.n, style: { display: "flex", gap: 14, alignItems: "flex-start" } }, /* @__PURE__ */ React.createElement("span", { style: {
@@ -381,7 +241,7 @@
     )));
   }
   function Footer({ data, country }) {
-    return /* @__PURE__ */ React.createElement("footer", { className: "footer", "data-country-content": true, key: "foot-" + country }, /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 12 } }, /* @__PURE__ */ React.createElement("span", { style: { display: "inline-block", width: 12, height: 12, borderRadius: "50%", background: "radial-gradient(circle at 30% 30%, var(--crimson-400), var(--crimson-700))", boxShadow: "0 0 12px var(--crimson-500)" } }), /* @__PURE__ */ React.createElement("strong", { style: { fontWeight: 900, letterSpacing: "-0.04em", fontSize: 18, color: "var(--fg-0)" } }, "ROKER ", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--crimson-500)" } }, "LABS"))), /* @__PURE__ */ React.createElement("p", { style: { color: "var(--fg-2)", fontSize: 13, lineHeight: 1.55, maxWidth: "36ch" } }, data.footer.tagline), /* @__PURE__ */ React.createElement("p", { style: { color: "var(--fg-4)", fontSize: 11, marginTop: 12 } }, data.footer.address), /* @__PURE__ */ React.createElement("p", { style: { color: "var(--fg-4)", fontSize: 11 } }, data.footer.cuit)), /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("h4", null, "Servicios"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Sistemas POS"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Dashboards"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Automatizaciones IA"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Cat\xE1logos web"), country === "PY" && /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Facturaci\xF3n SIFEN")), /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("h4", null, "Recursos"), /* @__PURE__ */ React.createElement("a", { href: "#analisis" }, "An\xE1lisis gratis 48hs"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Demos en vivo"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "Agendar demo")), /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("h4", null, "Contacto"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "WhatsApp directo"), /* @__PURE__ */ React.createElement("a", { href: "mailto:rokertsas@gmail.com" }, "rokertsas@gmail.com"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "Argentina \xB7 trabajando con Paraguay")), /* @__PURE__ */ React.createElement("div", { className: "footer-bottom", style: { gridColumn: "1 / -1" } }, /* @__PURE__ */ React.createElement("span", null, "\xA9 2026 Roker Labs \xB7 Sergio Roker"), /* @__PURE__ */ React.createElement("span", null, "Hecho a mano en ", country === "PY" ? "Argentina \u{1F1E6}\u{1F1F7} \xB7 trabajando con PY \u{1F1F5}\u{1F1FE}" : "Argentina · trabajando con Paraguay")));
+    return /* @__PURE__ */ React.createElement("footer", { className: "footer", "data-country-content": true, key: "foot-" + country }, /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 12 } }, /* @__PURE__ */ React.createElement("span", { style: { display: "inline-block", width: 12, height: 12, borderRadius: "50%", background: "radial-gradient(circle at 30% 30%, var(--crimson-400), var(--crimson-700))", boxShadow: "0 0 12px var(--crimson-500)" } }), /* @__PURE__ */ React.createElement("strong", { style: { fontWeight: 900, letterSpacing: "-0.04em", fontSize: 18, color: "var(--fg-0)" } }, "ROKER ", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--crimson-500)" } }, "LABS"))), /* @__PURE__ */ React.createElement("p", { style: { color: "var(--fg-2)", fontSize: 13, lineHeight: 1.55, maxWidth: "36ch" } }, data.footer.tagline), /* @__PURE__ */ React.createElement("p", { style: { color: "var(--fg-4)", fontSize: 11, marginTop: 12 } }, data.footer.address), /* @__PURE__ */ React.createElement("p", { style: { color: "var(--fg-4)", fontSize: 11 } }, data.footer.cuit)), /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("h4", null, "Servicios"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Sistemas POS"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Dashboards"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Automatizaciones IA"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Cat\xE1logos web"), country === "PY" && /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Facturaci\xF3n SIFEN")), /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("h4", null, "Recursos"), /* @__PURE__ */ React.createElement("a", { href: "#analisis" }, "An\xE1lisis gratis 48hs"), /* @__PURE__ */ React.createElement("a", { href: "#servicios" }, "Demos en vivo"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "Agendar demo")), /* @__PURE__ */ React.createElement("div", { className: "col" }, /* @__PURE__ */ React.createElement("h4", null, "Contacto"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "WhatsApp directo"), /* @__PURE__ */ React.createElement("a", { href: "mailto:rokertsas@gmail.com" }, "rokertsas@gmail.com"), /* @__PURE__ */ React.createElement("a", { href: "#contacto" }, "Argentina \xB7 trabajando con Paraguay")), /* @__PURE__ */ React.createElement("div", { className: "footer-bottom", style: { gridColumn: "1 / -1" } }, /* @__PURE__ */ React.createElement("span", null, "\xA9 2026 Roker Labs \xB7 Sergio Roker"), /* @__PURE__ */ React.createElement("span", null, "Hecho a mano en ", country === "PY" ? "Argentina \u{1F1E6}\u{1F1F7} \xB7 trabajando con PY \u{1F1F5}\u{1F1FE}" : "Argentina \xB7 trabajando con Paraguay")));
   }
   function App() {
     const [country, setCountry] = useState(() => {
@@ -410,7 +270,7 @@
       const phone = data.wa.phone.replace(/[^0-9]/g, "");
       return `https://wa.me/${phone}?text=${encodeURIComponent(txt)}`;
     }, [data, country]);
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Topbar, { country, setCountry: onSetCountry, services: data.services }), /* @__PURE__ */ React.createElement("main", { className: "page" }, /* @__PURE__ */ React.createElement(Hero, { data, country, waPrefill }), /* @__PURE__ */ React.createElement(TrustBar, { data, country }), /* @__PURE__ */ React.createElement(Bento, { data, country, bankList: data.bankList, waPrefill }), /* @__PURE__ */ React.createElement(LeadMagnet, { data, country }), /* @__PURE__ */ React.createElement(WaCta, { data, country, waPrefill }), /* @__PURE__ */ React.createElement(Footer, { data, country })));
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Topbar, { country, setCountry: onSetCountry, services: data.services }), /* @__PURE__ */ React.createElement("main", { className: "page" }, /* @__PURE__ */ React.createElement(Hero, { data, country, waPrefill }), /* @__PURE__ */ React.createElement(TrustBar, { data, country }), /* @__PURE__ */ React.createElement(DemosShowcase, { data, country }), /* @__PURE__ */ React.createElement(LeadMagnet, { data, country }), /* @__PURE__ */ React.createElement(WaCta, { data, country, waPrefill }), /* @__PURE__ */ React.createElement(Footer, { data, country })));
   }
   ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();

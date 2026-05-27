@@ -70,12 +70,12 @@ function Topbar({ country, setCountry, services }) {
         ROKER <span style={{ color: "var(--crimson-500)" }}>LABS</span>
       </div>
       <nav className="topbar-nav">
-        <a href="#servicios">Sistemas</a>
+        <a href="#demos">Sistemas</a>
         <a href="#analisis">Análisis gratis</a>
         <a href="#contacto">Contacto</a>
       </nav>
       <div className="topbar-spacer" />
-      <QuickLaunch services={services} />
+      <QuickLaunch />
       <CountrySwitch country={country} setCountry={setCountry} />
       <MagneticButton strength={0.25}>
         <a className="btn btn--primary btn--pulse" href="#contacto">
@@ -106,33 +106,31 @@ function CountrySwitch({ country, setCountry }) {
 
 }
 
-/* ─── Quick Launch (Modo Vendedor) — Cmd+K command palette ─── */
-function QuickLaunch({ services }) {
+/* ─── Quick Launch — 5 demos reales (Cmd/Ctrl+K) ─── */
+function QuickLaunch() {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const [activeIdx, setActiveIdx] = useState(0);
   const inputRef = useRef(null);
-  const listRef = useRef(null);
 
-  // Filtered + categorized
-  const cats = window.CATEGORIES;
+  // Detectar Mac vs Windows/Linux para mostrar el shortcut correcto
+  const isMac = useMemo(() =>
+    typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent)
+  , []);
+  const kbdLabel = isMac ? "⌘K" : "Ctrl+K";
+
+  const allDemos = window.DEMOS || [];
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase();
-    return services.filter((s) =>
-    !q || s.title.toLowerCase().includes(q) || (s.tag || "").toLowerCase().includes(q) || s.id.includes(q)
+    return allDemos.filter((d) =>
+      !q || d.name.toLowerCase().includes(q) ||
+            d.vertical.toLowerCase().includes(q) ||
+            d.id.includes(q)
     );
-  }, [services, filter]);
+  }, [allDemos, filter]);
 
-  // Group filtered by category
-  const grouped = useMemo(() => {
-    const map = {};
-    cats.forEach((c) => {map[c.id] = [];});
-    filtered.forEach((s) => {(map[s.cat] = map[s.cat] || []).push(s);});
-    return cats.map((c) => ({ ...c, items: map[c.id] || [] })).filter((c) => c.items.length);
-  }, [filtered, cats]);
-
-  // Flat list (for keyboard nav)
-  const flat = useMemo(() => grouped.flatMap((g) => g.items), [grouped]);
+  // Keep flat alias for keyboard nav (same shape)
+  const flat = filtered;
 
   // Global keyboard: Cmd/Ctrl+K to toggle, Esc to close
   useEffect(() => {
@@ -152,7 +150,7 @@ function QuickLaunch({ services }) {
       } else if (open && e.key === "Enter") {
         e.preventDefault();
         const item = flat[activeIdx];
-        if (item && item.demoUrl) window.open(item.demoUrl, "_blank");
+        if (item && item.url) window.open(item.url, "_blank");
       }
     };
     window.addEventListener("keydown", onKey);
@@ -181,9 +179,8 @@ function QuickLaunch({ services }) {
         <span className="ql-grid" aria-hidden="true">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => <span key={i} />)}
         </span>
-        <span className="ql-trigger-label">Demos
-</span>
-        <span className="ql-kbd">⌘K</span>
+        <span className="ql-trigger-label">Demos</span>
+        <span className="ql-kbd">{kbdLabel}</span>
       </button>
 
       {open && <>
@@ -200,48 +197,41 @@ function QuickLaunch({ services }) {
               <span className="ql-kbd ql-kbd--inline">esc</span>
             </div>
             <div className="ql-list" ref={listRef}>
-              {grouped.length === 0 &&
-            <div className="ql-empty">Sin resultados para «{filter}»</div>
-            }
-              {grouped.map((g) =>
-            <div className="ql-group" key={g.id}>
-                  <div className="ql-group-head">
-                    <TechIcon name={g.icon} size={12} />
-                    {g.label}
-                    <span className="ql-group-count">{g.items.length}</span>
-                  </div>
-                  {g.items.map((s) => {
-                const flatIdx = flat.indexOf(s);
-                const isActive = flatIdx === activeIdx;
-                return (
-                  <a
-                    key={s.id}
-                    href={s.demoUrl || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`ql-item ${isActive ? "is-active" : ""}`}
-                    onMouseEnter={() => setActiveIdx(flatIdx)}
-                    onClick={() => setOpen(false)}>
-                    
-                        <span className="ql-item-icon"><TechIcon name={s.icon} size={16} /></span>
-                        <span className="ql-item-body">
-                          <span className="ql-item-title">{s.title}</span>
-                          <span className="ql-item-url">{(s.demoUrl || "").replace("https://", "")}</span>
-                        </span>
-                        {s.tag && <span className={`ql-item-tag${s.tagPY ? " is-py" : ""}`}>{s.tag}</span>}
-                        <span className="ql-item-launch"><TechIcon name="arrow-right" size={14} /></span>
-                      </a>);
-
-              })}
-                </div>
-            )}
+              <div className="ql-group-head">
+                <TechIcon name="bolt" size={12} />
+                Demos en vivo
+                <span className="ql-group-count">{filtered.length}</span>
+              </div>
+              {filtered.length === 0 &&
+                <div className="ql-empty">Sin resultados para «{filter}»</div>
+              }
+              {filtered.map((d, i) =>
+                <a
+                  key={d.id}
+                  href={d.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`ql-item ${i === activeIdx ? "is-active" : ""}`}
+                  onMouseEnter={() => setActiveIdx(i)}
+                  onClick={() => setOpen(false)}>
+                  <span className="ql-item-icon" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: d.color, boxShadow: `0 0 8px ${d.color}80` }} />
+                  </span>
+                  <span className="ql-item-body">
+                    <span className="ql-item-title">{d.name}</span>
+                    <span className="ql-item-url">{d.vertical} · {d.url.replace("https://", "")}</span>
+                  </span>
+                  <span className="ql-badge ql-badge--live">LIVE</span>
+                  <span className="ql-item-launch"><TechIcon name="arrow-right" size={14} /></span>
+                </a>
+              )}
             </div>
             <div className="ql-foot">
               <span><span className="ql-kbd ql-kbd--inline">↑↓</span> navegar</span>
               <span><span className="ql-kbd ql-kbd--inline">↵</span> lanzar</span>
               <span><span className="ql-kbd ql-kbd--inline">esc</span> cerrar</span>
               <span className="ql-foot-spacer" />
-              <span className="ql-foot-meta">{flat.length} sistemas activos</span>
+              <span className="ql-foot-meta">5 demos en vivo</span>
             </div>
           </div>
         </>
@@ -273,7 +263,7 @@ function Hero({ data, country, waPrefill }) {
               {h.cta1} <TechIcon name="arrow-right" size={18} />
             </a>
           </MagneticButton>
-          <a className="btn btn--lg btn--ghost" href="#servicios">{h.cta2}</a>
+          <a className="btn btn--lg btn--ghost" href="#demos">{h.cta2}</a>
         </div>
 
         <div className="hero-meta">
@@ -430,6 +420,56 @@ function tabbedSize(svc) {
   if (svc.mock === "pos" || svc.mock === "dash") return "w3 h2";
   if (svc.id === "mp" || svc.id === "billeteras") return "w3 h2";
   return "w3";
+}
+
+/* ─── Demos showcase (magazine cards with real photos) ─── */
+function DemosShowcase({ data, country }) {
+  const demos = window.DEMOS || [];
+  return (
+    <section className="section demos-section" id="demos">
+      <div className="section-head" data-country-content key={"dhead-" + country}>
+        <div className="section-eyebrow">Demos navegables en vivo</div>
+        <h2 className="section-h2">5 sistemas reales. Tocá y probá.</h2>
+        <p className="section-sub">
+          No son mockups de Figma. Son sistemas deployados que podés navegar ahora
+          desde cualquier dispositivo — celular, tablet o computadora.
+        </p>
+      </div>
+      <div className="demos-grid">
+        {demos.map((demo) =>
+          <a
+            key={demo.id}
+            className="demo-card"
+            href={demo.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ "--demo-color": demo.color }}
+          >
+            <div
+              className="demo-card__photo"
+              style={{ backgroundImage: `${demo.bgMood}, url("${demo.bgImage}")` }}
+              aria-hidden="true"
+            />
+            <div className="demo-card__body">
+              <div className="demo-card__eyebrow">
+                <span className="demo-card__dot" style={{ background: demo.color }} aria-hidden="true" />
+                {demo.vertical}
+              </div>
+              <h3 className="demo-card__name">{demo.name}</h3>
+              <p className="demo-card__desc">{demo.tagline}</p>
+              <div className="demo-card__chips">
+                {demo.features.map((f) => <span key={f} className="demo-card__chip">{f}</span>)}
+              </div>
+              <div className="demo-card__footer">
+                <span className="demo-card__tech">{demo.tech}</span>
+                <span className="demo-card__cta" style={{ color: demo.color }}>Ver sistema →</span>
+              </div>
+            </div>
+          </a>
+        )}
+      </div>
+    </section>
+  );
 }
 
 function ServiceCell({ svc, country, bankList, waPrefill }) {
@@ -661,7 +701,7 @@ function WaCta({ data, country, waPrefill }) {
           </a>
         </MagneticButton>
         <p style={{ marginTop: 16, fontSize: 12, color: "var(--fg-4)", letterSpacing: "0.02em" }}>
-          {data.wa.phone} · respondo en horario de oficina · español rioplatense
+          {data.wa.phone} · AR + PY
         </p>
       </div>
 
@@ -669,7 +709,7 @@ function WaCta({ data, country, waPrefill }) {
         <div className="section-eyebrow">Cómo trabajamos</div>
         {[
         { n: "01", t: "Llamada de 25 min", d: "Vemos tu operación actual y los puntos de fricción." },
-        { n: "02", t: "Prototipo en 48hs", d: "Un mock funcional con tus datos reales. Sin contratos todavía." },
+        { n: "02", t: "Propuesta técnica en 48hs", d: "Un mock funcional con tus datos reales. Sin contratos todavía." },
         { n: "03", t: "Implementación en 30 días", d: "Sistema en producción, capacitación al equipo, soporte directo." }].
         map((step) =>
         <div key={step.n} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
@@ -776,7 +816,7 @@ function App() {
       <main className="page">
         <Hero data={data} country={country} waPrefill={waPrefill} />
         <TrustBar data={data} country={country} />
-        <Bento data={data} country={country} bankList={data.bankList} waPrefill={waPrefill} />
+        <DemosShowcase data={data} country={country} />
         <LeadMagnet data={data} country={country} />
         <WaCta data={data} country={country} waPrefill={waPrefill} />
         <Footer data={data} country={country} />

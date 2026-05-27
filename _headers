@@ -1,0 +1,18 @@
+# Cloudflare Pages — Cache headers
+# El HTML y el SW siempre desde la red. Los assets estáticos pueden cachearse.
+
+/
+  Cache-Control: no-store, no-cache, must-revalidate
+
+/index.html
+  Cache-Control: no-store, no-cache, must-revalidate
+
+/sw.js
+  Cache-Control: no-store, no-cache, must-revalidate
+  Service-Worker-Allowed: /
+
+/app.js
+  Cache-Control: no-store, no-cache, must-revalidate
+
+/content.js
+  Cache-Control: no-store, no-cache, must-revalidate

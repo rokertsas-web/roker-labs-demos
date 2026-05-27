@@ -14,20 +14,6 @@ function getQueryCountry() {
   const c = (p.get("country") || "").toUpperCase();
   return ["AR", "PY"].includes(c) ? c : null;
 }
-async function ipDetect() {
-  try {
-    const ctrl = new AbortController();
-    const to = setTimeout(() => ctrl.abort(), 2e3);
-    const r = await fetch("https://ipapi.co/json/", { signal: ctrl.signal });
-    clearTimeout(to);
-    if (!r.ok) return null;
-    const j = await r.json();
-    const cc = (j.country_code || j.country || "").toUpperCase();
-    return cc === "PY" ? "PY" : "AR";
-  } catch {
-    return null;
-  }
-}
 function MagneticButton({ children, strength = 0.35, ...rest }) {
   const wrapRef = useRef(null);
   const innerRef = useRef(null);
@@ -441,16 +427,6 @@ function App() {
   const [country, setCountry] = useState(() => {
     return getQueryCountry() || getCookie(COOKIE_NAME) || "AR";
   });
-  useEffect(() => {
-    if (getQueryCountry() || getCookie(COOKIE_NAME)) return;
-    (async () => {
-      const cc = await ipDetect();
-      if (cc && !getCookie(COOKIE_NAME)) {
-        setCountry(cc);
-        setCookie(COOKIE_NAME, cc, COOKIE_DAYS);
-      }
-    })();
-  }, []);
   const onSetCountry = useCallback((c) => {
     setCountry(c);
     setCookie(COOKIE_NAME, c, COOKIE_DAYS);
